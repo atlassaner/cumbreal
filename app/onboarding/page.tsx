@@ -1,0 +1,99 @@
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Cumbi } from '@/components/cumbreal/cumbi';
+import { DiagnosisResults } from '@/components/cumbreal/diagnosis-results';
+import { useAuth } from '@/lib/auth-context';
+import { PATHWAYS } from '@/lib/pathways';
+import { Answers, createDiagnosis, DIAGNOSIS_VERSION, GUEST_DIAGNOSIS_KEY, LIKERT_OPTIONS, QUESTIONS } from '@/lib/diagnosis';
+
+function Questionnaire() {
+  const { user, completeOnboarding } = useAuth();
+  const router = useRouter();
+  const [step, setStep] = useState(user?.diagnosis ? 7 : 0);
+  const [answers, setAnswers] = useState<Answers>(user?.diagnosis?.answers || {});
+  const [selected, setSelected] = useState(user?.diagnosis?.selectedPathwayId || '');
+  const [message, setMessage] = useState('');
+  const [ready, setReady] = useState(false);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const key = 'cumbreal_diagnosis_draft_v1:' + (user?.id || 'guest');
+  useEffect(() => {
+    try {
+      const storage = user ? localStorage : sessionStorage;
+      const raw = storage.getItem(key);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.version !== DIAGNOSIS_VERSION || !Number.isInteger(draft.step) || draft.step < 0 || draft.step > 7 || !draft.answers || typeof draft.answers !== 'object' || Array.isArray(draft.answers) || typeof draft.selected !== 'string' || (draft.selected && !PATHWAYS.some(p => p.id === draft.selected)) || Object.entries(draft.answers).some(([id, value]) => !QUESTIONS.some(q => q.id === id) || !Number.isInteger(value) || Number(value) < 1 || Number(value) > 5)) throw new Error('invalid');
+        if (draft.step === 7) createDiagnosis(draft.answers, draft.selected);
+        setAnswers(draft.answers); setSelected(draft.selected); setStep(draft.step);
+      }
+    } catch { setMessage('No pudimos recuperar el borrador. Puedes volver a responder; tu resultado guardado sigue en tu perfil.'); }
+    setReady(true);
+    // The parent remounts the questionnaire whenever the account changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => { if (ready && step > 0) heading.current?.focus(); }, [step, ready]);
+  function persist(nextAnswers: Answers, nextStep: number, nextSelected = selected) {
+    setAnswers(nextAnswers); setStep(nextStep); setSelected(nextSelected); setMessage('');
+    try { (user ? localStorage : sessionStorage).setItem(key, JSON.stringify({ version: DIAGNOSIS_VERSION, answers: nextAnswers, step: nextStep, selected: nextSelected })); if (!user) sessionStorage.removeItem(GUEST_DIAGNOSIS_KEY); }
+    catch { setMessage('Tus respuestas siguen en pantalla, pero no pudimos guardar el borrador. Comprueba el almacenamiento antes de salir.'); }
+  }
+  const batch = QUESTIONS.slice((step - 1) * 3, step * 3);
+  const answered = QUESTIONS.filter(q => answers[q.id] !== undefined).length;
+  const completeBatch = batch.length === 3 && batch.every(q => answers[q.id] !== undefined);
+  const result = step === 7 ? createDiagnosis(answers, selected) : null;
+  function next() {
+    if (!completeBatch) { setMessage('Responde las tres actividades antes de continuar.'); return; }
+    try { if (step === 6) createDiagnosis(answers); persist(answers, step + 1); }
+    catch { setMessage('Faltan respuestas. Vuelve a las actividades anteriores y completa las 18.'); }
+  }
+  function finish() {
+    if (!selected || !result) { setMessage('Elige una trayectoria para comenzar.'); return; }
+    try {
+      if (user) {
+        completeOnboarding(result);
+        try { localStorage.removeItem(key); } catch { /* The completed profile is already saved. */ }
+        router.push('/dashboard/pathways');
+      } else {
+        sessionStorage.setItem(GUEST_DIAGNOSIS_KEY, JSON.stringify(result));
+        sessionStorage.removeItem(key);
+        router.push('/signup');
+      }
+    } catch { setMessage('No pudimos guardar el resultado. Tus respuestas siguen aquí. Comprueba el almacenamiento e inténtalo de nuevo.'); }
+  }
+  if (!ready) return <p role="status">Preparando tu exploración…</p>;
+  return <div className="panel">
+    {step === 0 ? <>
+      <div className="flex justify-center"><Cumbi state="Curioso" size={150}/></div>
+      <p className="eyebrow">Tu punto de partida</p><h1 ref={heading} tabIndex={-1} className="text-4xl mt-3">Descubre qué te mueve.</h1>
+      <p className="text-ink-muted mt-4">Cumbi te acompaña por 18 actividades. Dinos cuánto te gustaría hacer cada una, aunque todavía no sepas cómo. Piensa en tu interés, no en tus notas ni en lo que otras personas esperan.</p>
+      <ul className="list-disc pl-5 space-y-2 mt-5"><li>Seis bloques de tres actividades, sin límite de tiempo.</li><li>Podrás revisar tus respuestas y explorar ocho trayectorias de El Salvador.</li><li>Tu resultado describe intereses actuales. Esta adaptación no es una prueba de aptitud ni un diagnóstico psicológico validado.</li></ul>
+      <p className="text-sm text-ink-muted mt-5">{user ? 'El borrador y el resultado se guardan por separado para cada perfil en este navegador.' : 'Puedes explorar sin cuenta. Al terminar, crea un perfil para guardar tu resultado. El borrador temporal vive en esta pestaña.'} No se sincroniza con otros dispositivos.</p>
+      <div className="flex flex-wrap justify-between gap-3 mt-6"><Link href={user ? '/dashboard' : '/'}>Volver</Link><button type="button" className="button" onClick={() => persist(answers, 1)}>Comenzar mis 18 actividades</button></div>
+    </> : step < 7 ? <>
+      <p className="eyebrow" aria-live="polite">Bloque {step} de 6 · {answered} de 18 respondidas</p>
+      <progress className="w-full h-2 mt-3 accent-teal-deep" max={18} value={answered} aria-label="Actividades respondidas"/>
+      <h1 ref={heading} tabIndex={-1} className="text-3xl mt-5">¿Cuánto te gustaría hacer esto?</h1>
+      <p className="text-sm text-ink-muted mt-3">Elige una respuesta por actividad. Puedes cambiarla. Con el teclado: Tab entra al grupo y las flechas recorren sus opciones.</p>
+      <div className="space-y-8 mt-6">{batch.map(q => <fieldset key={q.id} className="border-t border-ink/15 pt-5">
+        <legend className="font-medium pr-2">{q.id.slice(1)}. {q.text}</legend>
+        <div className="grid gap-2 mt-3">{LIKERT_OPTIONS.map((label, i) => <label key={label} className={'flex items-center gap-3 min-h-[48px] border rounded-lg px-4 py-2 cursor-pointer ' + (answers[q.id] === i + 1 ? 'border-teal bg-teal-light' : 'border-ink/20 hover:bg-canvas')}>
+          <input className="w-5 h-5 accent-teal-deep shrink-0" type="radio" name={q.id} value={i + 1} checked={answers[q.id] === i + 1} onChange={() => persist({ ...answers, [q.id]: i + 1 }, step)}/><span>{i + 1} · {label}</span>
+        </label>)}</div>
+      </fieldset>)}</div>
+      <div className="flex justify-between gap-3 mt-8 border-t border-ink/15 pt-5"><button type="button" className="button button-secondary" onClick={() => persist(answers, step - 1)}>Anterior</button><button type="button" className="button disabled:opacity-60" disabled={!completeBatch} onClick={next}>{step === 6 ? 'Ver mis resultados' : 'Continuar'}</button></div>
+    </> : result && <>
+      <h1 ref={heading} tabIndex={-1} className="text-4xl mb-6">Un mapa para comenzar.</h1>
+      <DiagnosisResults result={result} selected={selected} onSelect={id => persist(answers, 7, id)}/>
+      <p className="text-sm text-ink-muted mt-6">{user?.diagnosis ? 'Guardar actualizará tu resultado y conservará tus actividades y XP.' : 'Recibirás 50 XP al guardar tu primer diagnóstico. Repetirlo no suma XP adicionales.'}</p>
+      <div className="flex flex-wrap justify-between gap-3 border-t border-ink/15 pt-5 mt-6"><button type="button" className="button button-secondary" onClick={() => persist(answers, 1)}>Revisar mis respuestas</button><button type="button" className="button disabled:opacity-60" disabled={!selected} onClick={finish}>{user ? 'Guardar mi resultado' : 'Crear perfil y guardar resultado'}</button></div>
+    </>}
+    {message && <p role="alert" className="notice mt-5">{message}</p>}
+  </div>;
+}
+export default function Onboarding() {
+  const { user, isLoading } = useAuth();
+  if (isLoading) return <p role="status">Abriendo tu perfil…</p>;
+  return <Questionnaire key={user?.id || 'guest'}/>;
+}

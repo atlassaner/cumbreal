@@ -20,6 +20,11 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       colors: {
+        canvas: { DEFAULT: 'rgb(var(--canvas) / <alpha-value>)', subtle: 'rgb(var(--canvas-subtle) / <alpha-value>)' },
+        ink: { DEFAULT: 'rgb(var(--ink) / <alpha-value>)', muted: 'rgb(var(--ink-muted) / <alpha-value>)', faint: 'rgb(var(--ink-faint) / <alpha-value>)' },
+        teal: { DEFAULT: 'rgb(var(--teal) / <alpha-value>)', vibrant: 'rgb(var(--teal-vibrant) / <alpha-value>)', deep: 'rgb(var(--teal-deep) / <alpha-value>)', light: 'rgb(var(--teal-light) / <alpha-value>)' },
+        amber: { DEFAULT: 'rgb(var(--amber) / <alpha-value>)', subtle: 'rgb(var(--amber-subtle) / <alpha-value>)', dark: 'rgb(var(--amber-dark) / <alpha-value>)' },
+        status: { success: 'rgb(var(--success) / <alpha-value>)', alert: 'rgb(var(--alert) / <alpha-value>)' },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -60,21 +65,12 @@ const config: Config = {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
-        obsidian: '#070403',
-        charcoal: '#151314',
-        ivory: '#F8F6F3',
-        rose: {
-          DEFAULT: '#DCB5C6',
-          deep: '#A66F85',
-        },
-        slate: {
-          cumbreal: '#817B7A',
-        },
       },
       fontFamily: {
-        serif: ['var(--font-dm-serif-display)', 'var(--font-playfair-display)', 'Georgia', 'serif'],
+        serif: ['var(--font-dm-serif-display)', 'Georgia', 'serif'],
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
+      boxShadow: { card: '0 2px 12px rgba(34,49,58,0.05)', elevated: '0 10px 30px rgba(34,49,58,0.08)', 'amber-glow': '0 4px 20px rgba(242,170,46,0.25)' },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },
