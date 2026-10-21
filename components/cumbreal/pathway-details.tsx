@@ -1,4 +1,5 @@
 import { Pathway, CATALOG_REVIEWED_AT } from '@/lib/pathways';
+import { OccupationPanel } from './occupation-panel';
 export function PathwayDetails({ path }: { path: Pathway }) {
   return <div className="space-y-6 mt-5">
     <p className="text-ink-muted">{path.description}</p>
@@ -13,5 +14,6 @@ export function PathwayDetails({ path }: { path: Pathway }) {
     </section>
     <section className="rounded-lg bg-canvas-subtle p-4"><h3 className="font-sans text-lg font-semibold">Tu primer proyecto</h3><p className="mt-2">{path.starterProject}</p><p className="text-sm text-ink-muted mt-3"><strong>Evidencia para guardar:</strong> {path.evidence}</p></section>
     <div className="flex flex-wrap gap-2">{path.skills.map(skill => <span className="tag" key={skill}>{skill}</span>)}</div>
+    <OccupationPanel pathwayId={path.id}/>
   </div>;
 }
