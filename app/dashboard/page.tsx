@@ -21,7 +21,7 @@ export default function Overview() { const { user } = useAuth(); const { activit
 <p className="text-sm text-ink-muted mt-2">{activities.length} actividades · {verified.length} evidencias verificadas en modo de prueba</p>
 </div>
 <Aperture level={rank.level} size={90}/>
-</section>{!user.diagnosis && <Link href="/onboarding" className="button mt-5">Completar mi diagnóstico <ArrowUpRight size={18}/>
+</section>{!user.diagnosis && <Link href="/onboarding" className="button mt-5">Explorar mis intereses <ArrowUpRight size={18}/>
 </Link>}<section className="mt-10">
 <div className="flex flex-wrap justify-between items-center gap-3">
 <h2 className="text-3xl">Lo que estás aprendiendo</h2>

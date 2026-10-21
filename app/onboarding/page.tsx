@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Cumbi } from '@/components/cumbreal/cumbi';
 import { DiagnosisResults } from '@/components/cumbreal/diagnosis-results';
+import { AssessmentReference } from '@/components/cumbreal/assessment-reference';
 import { useAuth } from '@/lib/auth-context';
 import { PATHWAYS } from '@/lib/pathways';
 import { Answers, createDiagnosis, DIAGNOSIS_VERSION, GUEST_DIAGNOSIS_KEY, LIKERT_OPTIONS, QUESTIONS } from '@/lib/diagnosis';
@@ -70,6 +71,7 @@ function Questionnaire() {
       <p className="text-ink-muted mt-4">Cumbi te acompaña por 18 actividades. Dinos cuánto te gustaría hacer cada una, aunque todavía no sepas cómo. Piensa en tu interés, no en tus notas ni en lo que otras personas esperan.</p>
       <ul className="list-disc pl-5 space-y-2 mt-5"><li>Seis bloques de tres actividades, sin límite de tiempo.</li><li>Podrás revisar tus respuestas y explorar ocho trayectorias de El Salvador.</li><li>Tu resultado describe intereses actuales. Esta adaptación no es una prueba de aptitud ni un diagnóstico psicológico validado.</li></ul>
       <p className="text-sm text-ink-muted mt-5">{user ? 'El borrador y el resultado se guardan por separado para cada perfil en este navegador.' : 'Puedes explorar sin cuenta. Al terminar, crea un perfil para guardar tu resultado. El borrador temporal vive en esta pestaña.'} No se sincroniza con otros dispositivos.</p>
+      <AssessmentReference />
       <div className="flex flex-wrap justify-between gap-3 mt-6"><Link href={user ? '/dashboard' : '/'}>Volver</Link><button type="button" className="button" onClick={() => persist(answers, 1)}>Comenzar mis 18 actividades</button></div>
     </> : step < 7 ? <>
       <p className="eyebrow" aria-live="polite">Bloque {step} de 6 · {answered} de 18 respondidas</p>
@@ -86,7 +88,7 @@ function Questionnaire() {
     </> : result && <>
       <h1 ref={heading} tabIndex={-1} className="text-4xl mb-6">Un mapa para comenzar.</h1>
       <DiagnosisResults result={result} selected={selected} onSelect={id => persist(answers, 7, id)}/>
-      <p className="text-sm text-ink-muted mt-6">{user?.diagnosis ? 'Guardar actualizará tu resultado y conservará tus actividades y XP.' : 'Recibirás 50 XP al guardar tu primer diagnóstico. Repetirlo no suma XP adicionales.'}</p>
+      <p className="text-sm text-ink-muted mt-6">{user?.diagnosis ? 'Guardar actualizará tu resultado y conservará tus actividades y XP.' : 'Recibirás 50 XP al guardar tu primer perfil de intereses. Repetirlo no suma XP adicionales.'}</p>
       <div className="flex flex-wrap justify-between gap-3 border-t border-ink/15 pt-5 mt-6"><button type="button" className="button button-secondary" onClick={() => persist(answers, 1)}>Revisar mis respuestas</button><button type="button" className="button disabled:opacity-60" disabled={!selected} onClick={finish}>{user ? 'Guardar mi resultado' : 'Crear perfil y guardar resultado'}</button></div>
     </>}
     {message && <p role="alert" className="notice mt-5">{message}</p>}

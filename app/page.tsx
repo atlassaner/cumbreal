@@ -8,7 +8,7 @@ const steps: {
     title: string;
     text: string;
 }[] = [
-    { state: 'Curioso', title: 'Conócete un poco más', text: 'Un diagnóstico breve para pensar en tus intereses. Un punto de partida, no una etiqueta.' },
+    { state: 'Curioso', title: 'Conócete un poco más', text: 'Una exploración breve para pensar en tus intereses. Un punto de partida, no una etiqueta.' },
     { state: 'Leyendo', title: 'Dale valor a lo que haces', text: 'Registra un proyecto, explica lo que aprendiste y reúne evidencia de tus capacidades.' },
     { state: 'Explorando', title: 'Explora nuevas posibilidades', text: 'Conecta tus aprendizajes con caminos que puedas probar, paso a paso.' }
 ];

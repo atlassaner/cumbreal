@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: {
 <p className="text-xs text-ink-muted mt-2">{rank.next ? 'Siguiente nivel: ' + rank.next + ' XP' : 'Has llegado a Líder'}</p>
 </div>
 <nav aria-label="Tu espacio" className="grid gap-2 mt-5">{links.map(item => <Link key={item.href} href={item.href} aria-current={path === item.href ? 'page' : undefined} onClick={() => setOpen(false)} className={'rounded-lg px-3 py-3 gap-3 ' + (path === item.href ? 'bg-teal-light text-teal-deep font-medium' : 'hover:bg-canvas')}>
-<item.icon size={18}/>{item.label}</Link>)}<Link href="/onboarding" className="px-3 py-3">Revisar mi diagnóstico</Link>
+<item.icon size={18}/>{item.label}</Link>)}<Link href="/onboarding" className="px-3 py-3">Revisar mis intereses</Link>
 </nav>
 <div className="grid mt-8 border-t border-ink/15 pt-4">
 <button className="text-left flex gap-2 items-center" onClick={() => { auth.logout(); router.push('/login'); }}>

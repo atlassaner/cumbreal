@@ -6,7 +6,7 @@ export function Hero() { return <section className="wrap grid lg:grid-cols-[1.05
 <p className="eyebrow">Un camino que empieza contigo</p>
 <h1 className="text-5xl lg:text-[64px] mt-4 max-w-xl">Descubre el rumbo de tu aprendizaje.</h1>
 <p className="text-ink-muted text-lg mt-6 max-w-lg">Lo que aprendes puede abrir nuevos caminos. Reconoce tus intereses, reúne evidencias y explora tu siguiente paso con Cumbi.</p>
-<Link href="/onboarding" className="button mt-8">Comenzar diagnóstico vocacional <ArrowRight size={18}/>
+<Link href="/onboarding" className="button mt-8">Explorar mis intereses <ArrowRight size={18}/>
 </Link>
 <p className="text-sm text-ink-muted mt-5">Diseñado para estudiantes e instituciones de El Salvador.</p>
 </div>

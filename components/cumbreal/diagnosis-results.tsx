@@ -2,6 +2,7 @@
 import { DiagnosisResult, DIMENSIONS, HOLLAND_TYPES } from '@/lib/diagnosis';
 import { PATHWAYS } from '@/lib/pathways';
 import { PathwayDetails } from './pathway-details';
+import { AssessmentReference } from './assessment-reference';
 
 export function InterestProfile({ result }: { result: DiagnosisResult }) {
   return <section aria-label="Perfil de intereses">
@@ -20,6 +21,7 @@ export function InterestProfile({ result }: { result: DiagnosisResult }) {
         <p>La coincidencia compara la dirección de tus seis puntuaciones con el perfil de cada trayectoria mediante similitud coseno × 100. No es una probabilidad de éxito, aptitud o empleo; perfiles muy distintos pueden compartir un porcentaje parecido.</p>
         <p>Esta adaptación de 18 preguntas se basa en RIASEC. Sus preguntas y perfiles de trayectoria son una propuesta editorial sin validación psicométrica local. La evidencia de otros instrumentos RIASEC no valida automáticamente esta adaptación.</p>
         <a href="https://www.onetcenter.org/reports/IP_Manual.html" target="_blank" rel="noreferrer" className="underline text-teal-deep">Consultar el marco RIASEC y el manual de O*NET ↗</a>
+        <AssessmentReference />
       </div>
     </details>
   </section>;
