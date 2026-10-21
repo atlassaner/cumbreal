@@ -8,7 +8,7 @@ Actualizado el 20 de octubre de 2026. Los estados describen qué material existe
 | --- | --- | --- |
 | 1. Demo funcional | Eduardo la declara preparada. El código actualizado también tiene una comprobación local de recorrido; no sustituye la prueba en el equipo de feria. | [Registro de verificación](verificacion-y-cambios.md). |
 | 2. Alcance RIASEC | Límites visibles y acceso externo al instrumento oficial preparados. La adaptación de 18 preguntas sigue sin validación psicométrica local. | [Decisión de instrumento](riasec-decision-y-validacion.md). |
-| 3. URL y QR | URL exacta confirmada por Eduardo; imagen para ese destino disponible. Escaneo del QR final y prueba de proyección corresponden al equipo. | [Carpeta de entrega](../../fair/README.md), `https://cumbreal.vercel.app`. |
+| 3. URL y QR | URL exacta confirmada por Eduardo; imagen para ese destino disponible. Las páginas actualizadas pasaron seis comprobaciones públicas tras el push. Escaneo del QR final y prueba de proyección corresponden al equipo. | [Carpeta de entrega](../../fair/README.md), `https://cumbreal.vercel.app`. |
 | 4. Ejemplo de demostración | Reservado a Eduardo. | Mantener continuidad entre ruta, proyecto y evidencia. |
 | 5. Video | Reservado a Eduardo. | MP4 de aproximadamente 90 s; reproducción offline y duración por verificar al recibirlo. |
 | 6. Presentación | Eduardo canceló el trabajo adicional en PowerPoint. No se incluye el borrador generado. Sus archivos previos se conservan. | Usar su presentación y el guion de referencia. |

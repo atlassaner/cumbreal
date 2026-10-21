@@ -24,6 +24,7 @@ El Word y las presentaciones previas del usuario no se modificaron. El trabajo a
 | `npm run typecheck` | Satisfactorio | Tipos TypeScript. |
 | `npm run test:diagnosis` | 11 pruebas satisfactorias | Incluyen 1,000 perfiles deterministas generados, respuestas inválidas, empates, bajo interés, ranking y restauración. No son 1,000 participantes humanos. |
 | Edge + Playwright | 54 comprobaciones satisfactorias; cero errores y advertencias de consola | Sitio local en `http://127.0.0.1:3100`, vistas de 1440 y 375 px. |
+| Sitio público, después del push | 6 comprobaciones satisfactorias; cero errores observados | Contacto y propuesta de piloto actualizados, enlace O*NET tras hidratar, vista móvil y privacidad en `https://cumbreal.vercel.app`. |
 | `git diff --check` y revisión de enlaces locales | Sin errores al finalizar | Formato de cambios y vínculos de documentación. |
 | CSV de investigación | Cinco plantillas con encabezados únicos y sin filas de respuestas | No se inventaron compradores, estudiantes, gastos ni ventas. |
 
@@ -44,7 +45,9 @@ Las capturas y el JSON de ejecución se guardaron como evidencia local de QA, fu
 
 ## URL y QR
 
-Eduardo confirmó `https://cumbreal.vercel.app`. El QR local codifica exactamente esa cadena, usa cuatro módulos de margen y corrección de errores alta. El navegador de QA no dispuso de un decodificador QR, por lo que no se afirma una lectura automática ni una prueba de escaneo en teléfono. Antes de proyectar, el equipo debe comprobar esa imagen final y la distancia real. La disponibilidad de la demo fue declarada por el usuario; este registro local no acredita el despliegue de cada commit nuevo.
+Eduardo confirmó `https://cumbreal.vercel.app`. Después de publicar `83118da`, el estado de Vercel en GitHub fue satisfactorio. Una comprobación pública independiente con Edge pasó seis verificaciones: respuesta HTTP 200 de instituciones, nuevo contacto y términos propuestos, enlace externo oficial tras cargar el cuestionario, ausencia de desbordamiento a 375 px, privacidad actualizada y ausencia de errores de navegador/consola. No creó perfiles ni envió mensajes. El código de aplicación corresponde al commit `f770d5c`; las revisiones posteriores de este registro solo documentan evidencia.
+
+El QR local codifica exactamente esa URL, usa cuatro módulos de margen y corrección de errores alta. El navegador de QA no dispuso de un decodificador QR, por lo que no se afirma una lectura automática ni una prueba de escaneo en teléfono. Antes de proyectar, el equipo debe comprobar esa imagen final y la distancia real. La comprobación pública no sustituye el ensayo del recorrido completo en el equipo de feria.
 
 ## Dependencias que siguen abiertas
 

@@ -7,6 +7,7 @@
 - La página institucional presenta acceso gratuito actual, tarifas propuestas, cobertura y un piloto de cuatro semanas sujeto a acuerdo. Se sustituyó el formulario desconectado por un enlace que prepara un correo editable sin enviarlo automáticamente.
 - Se documentaron decisiones de instrumento, límites de evidencia, revisión profesional, validación comercial, costos, precios, ensayo de dos presentadores y entrega.
 - Se incorporaron plantillas CSV vacías para registrar investigación y un QR para la URL confirmada del prototipo.
+- Se verificaron build, lint, tipos, 11 pruebas de lógica, 54 comprobaciones locales de interfaz y seis comprobaciones posteriores del sitio público. El escaneo del QR en el teléfono de presentación sigue pendiente.
 - Se conservaron el Word editado y las presentaciones previas del usuario. El trabajo adicional en PowerPoint se detuvo a su solicitud; el borrador no forma parte de la entrega.
 
 ## 2026-10-20 · Exploración ocupacional
