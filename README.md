@@ -29,6 +29,8 @@ The onboarding questionnaire now has 18 RIASEC-based items, six interest scores,
 
 The older visual/stress scripts below predate the new questionnaire and three-to-eight trajectory expansion; their previous onboarding expectations are historical. Use the diagnosis tests above for current scoring checks.
 
+The interface calls this flow **interest exploration**, not a validated psychological diagnosis. Onboarding and the result interpretation also link to the official external [O*NET® Interest Profiler in Spanish](https://onetinterestprofiler.org/es/), a distinct 30-question instrument. Its occupational information concerns the United States; Cumbreal does not transfer answers, import its results or claim that its evidence validates the custom 18 items. See the [instrument decision and review plan](docs/fair/riasec-decision-y-validacion.md).
+
 ## Occupational exploration available now
 
 Each of the eight trajectories includes three static occupation examples, preparation to explore, and a link to a Salvadoran institution's graduate profile or curriculum. The panel appears on the homepage, in the selected questionnaire result, and in the dashboard's trajectory explorer. Where relevant, it also describes a self-employment or entrepreneurship possibility.
@@ -70,7 +72,15 @@ Professional review of the questionnaire, local psychometric validation, usabili
 
 Profiles and per-profile activities live only in this browser. Passwords are checked against a salted local PBKDF2 verifier; browser storage can be edited and this is not production authentication. Use test data and a disposable test password. Sign out or delete a local profile from the sidebar. New profiles do not import older shared demo records.
 
-Google OAuth, password-reset email, institutional form submission, server persistence, authorized evidence review, and scientifically validated career matching are not connected. The interface explicitly represents these limits. Evidence verification is a clearly labeled local simulation.
+Google OAuth, password-reset email, server persistence, authorized evidence review, and scientifically validated career matching are not connected. The interface explicitly represents these limits. Evidence verification is a clearly labeled local simulation.
+
+The institutions page opens an editable email draft to `cumbreal.cc@gmail.com`; the visitor chooses whether to send it in their own email client. Cumbreal does not submit or store an institutional form. The page states that the prototype is free and presents proposed institutional pricing ($500/month for up to 100 students) and a proposed four-week pilot ($250 for up to 100), subject to agreement. The contemplated $5/month individual subscription still requires scope and demand validation. There is no checkout, active paid offer or automatic renewal.
+
+## Regional fair preparation
+
+The [fair preparation index and task status](docs/fair/README.md) links the technical answer sheet, professional review packet, pricing and cost analysis, four-week pilot protocol, buyer research templates and two-presenter rehearsal plan. [Changes and verification](docs/fair/verificacion-y-cambios.md) distinguish software checks from market, psychometric and educational evidence.
+
+The team supplied `https://cumbreal.vercel.app` as the final demo URL. The [fair handoff folder](fair/README.md) includes the URL, a QR for that destination and the resources manifest. The demonstration example and MP4 remain Eduardo's responsibility. Further PowerPoint work was canceled at his request; no newly generated PPTX or PDF is included in this handoff. Existing presentation files and the edited Word outside the application repository are preserved.
 
 ## Design and delivery evidence
 
