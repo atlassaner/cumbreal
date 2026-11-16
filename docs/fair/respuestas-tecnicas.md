@@ -142,7 +142,7 @@ npm run typecheck
 npm run test:diagnosis
 ```
 
-Ejecutar compilación antes de `typecheck` cuando Next.js necesite generar sus tipos. Los scripts visuales antiguos en `unslop/` anteceden al nuevo cuestionario y no son evidencia automática de las expectativas actuales; revisar su alcance antes de citarlos. El último control específico de esta entrega es `fair-qa.cjs`, cuya salida se identifica arriba. Las herramientas de QA deben registrar lo probado, sin convertir capturas o salidas de consola en una validación educativa.
+Ejecutar compilación antes de `typecheck` cuando Next.js necesite generar sus tipos. Los scripts visuales antiguos en `../archive/unslop/` anteceden al nuevo cuestionario y no son evidencia automática de las expectativas actuales; revisar su alcance antes de citarlos. El último control específico de esta entrega es `fair-qa.cjs`, cuya salida se identifica arriba. Las herramientas de QA deben registrar lo probado, sin convertir capturas o salidas de consola en una validación educativa.
 
 ## Regla para contestar una pregunta imprevista
 

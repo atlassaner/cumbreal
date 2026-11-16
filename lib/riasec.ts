@@ -1,5 +1,5 @@
 export const DIMENSIONS = ['R', 'I', 'A', 'S', 'E', 'C'] as const;
-export type HollandType = typeof DIMENSIONS[number];
+export type HollandType = (typeof DIMENSIONS)[number];
 export type RIASECVector = [number, number, number, number, number, number];
 export const HOLLAND_TYPES: Record<HollandType, { name: string; description: string }> = {
   R: { name: 'Realista', description: 'Construir, reparar y trabajar con herramientas o naturaleza.' },

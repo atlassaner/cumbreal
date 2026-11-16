@@ -3,7 +3,6 @@ import { DIMENSIONS, hollandCode, HollandType, rankedDimensions, RIASECVector } 
 export { DIMENSIONS, HOLLAND_TYPES } from './riasec';
 export type { RIASECVector } from './riasec';
 export const DIAGNOSIS_VERSION = 'riasec-18-v1';
-export const GUEST_DIAGNOSIS_KEY = 'cumbreal_diagnosis_guest_v1';
 export const LIKERT_OPTIONS = ['Me desagrada mucho', 'No me interesa', 'Me da igual / Neutral', 'Me interesa', 'Me entusiasma mucho'];
 const prompts = [
   'Armar, desarmar o reparar aparatos electrónicos, motores o instalaciones eléctricas.',
@@ -49,48 +48,104 @@ export interface DiagnosisResult {
   completedAt: string;
 }
 export function calculateRIASEC(answers: Answers): RIASECVector {
-  if (!answers || typeof answers !== 'object' || Object.keys(answers).length !== QUESTIONS.length || QUESTIONS.some(q => !Number.isInteger(answers[q.id]) || answers[q.id] < 1 || answers[q.id] > 5)) {
+  if (
+    !answers ||
+    typeof answers !== 'object' ||
+    Object.keys(answers).length !== QUESTIONS.length ||
+    QUESTIONS.some((q) => !Number.isInteger(answers[q.id]) || answers[q.id] < 1 || answers[q.id] > 5)
+  ) {
     throw new Error('Responde las 18 actividades con un valor del 1 al 5.');
   }
-  return DIMENSIONS.map(d => (QUESTIONS.filter(q => q.dimension === d).reduce((sum, q) => sum + answers[q.id], 0) - 3) / 12) as RIASECVector;
+  return DIMENSIONS.map(
+    (d) => (QUESTIONS.filter((q) => q.dimension === d).reduce((sum, q) => sum + answers[q.id], 0) - 3) / 12,
+  ) as RIASECVector;
 }
 export function cosineSimilarity(v1: number[], v2: number[]): number {
-  if (!v1.length || v1.length !== v2.length || [...v1, ...v2].some(n => !Number.isFinite(n) || n < 0)) throw new Error('Los vectores deben tener igual longitud y valores finitos no negativos.');
+  if (!v1.length || v1.length !== v2.length || [...v1, ...v2].some((n) => !Number.isFinite(n) || n < 0))
+    throw new Error('Los vectores deben tener igual longitud y valores finitos no negativos.');
   const norm = (v: number[]) => Math.sqrt(v.reduce((sum, n) => sum + n * n, 0));
   const denominator = norm(v1) * norm(v2);
   if (!denominator) return 0;
   return Math.min(1, Math.max(0, v1.reduce((sum, n, i) => sum + n * v2[i], 0) / denominator));
 }
 export function matchTrajectories(userVector: RIASECVector, catalog: Pathway[]): TrajectoryMatchResult[] {
-  if (userVector.length !== 6 || userVector.some(n => !Number.isFinite(n) || n < 0 || n > 1)) throw new Error('Vector RIASEC inválido.');
-  return catalog.map(path => {
-    const similarity = cosineSimilarity(userVector, path.riasecVector);
-    const sharedDimensions = [...DIMENSIONS].sort((a, b) => userVector[DIMENSIONS.indexOf(b)] * path.riasecVector[DIMENSIONS.indexOf(b)] - userVector[DIMENSIONS.indexOf(a)] * path.riasecVector[DIMENSIONS.indexOf(a)]).filter(d => userVector[DIMENSIONS.indexOf(d)] > 0).slice(0, 2);
-    return { pathwayId: path.id, similarity, matchScore: Math.round(similarity * 100), sharedDimensions };
-  }).sort((a, b) => b.similarity - a.similarity || a.pathwayId.localeCompare(b.pathwayId));
+  if (userVector.length !== 6 || userVector.some((n) => !Number.isFinite(n) || n < 0 || n > 1)) throw new Error('Vector RIASEC inválido.');
+  return catalog
+    .map((path) => {
+      const similarity = cosineSimilarity(userVector, path.riasecVector);
+      const sharedDimensions = [...DIMENSIONS]
+        .sort(
+          (a, b) =>
+            userVector[DIMENSIONS.indexOf(b)] * path.riasecVector[DIMENSIONS.indexOf(b)] -
+            userVector[DIMENSIONS.indexOf(a)] * path.riasecVector[DIMENSIONS.indexOf(a)],
+        )
+        .filter((d) => userVector[DIMENSIONS.indexOf(d)] > 0)
+        .slice(0, 2);
+      return { pathwayId: path.id, similarity, matchScore: Math.round(similarity * 100), sharedDimensions };
+    })
+    .sort((a, b) => b.similarity - a.similarity || a.pathwayId.localeCompare(b.pathwayId));
 }
 export function createDiagnosis(answers: Answers, selectedPathwayId = '', completedAt = new Date().toISOString()): DiagnosisResult {
   const vector = calculateRIASEC(answers);
-  const max = Math.max(...vector), min = Math.min(...vector);
+  const max = Math.max(...vector),
+    min = Math.min(...vector);
   const status = max === 0 ? 'no-interest' : max === min ? 'flat' : max <= 0.5 ? 'low-interest' : 'differentiated';
   const order = rankedDimensions(vector);
-  const sorted = order.map(d => vector[DIMENSIONS.indexOf(d)]);
+  const sorted = order.map((d) => vector[DIMENSIONS.indexOf(d)]);
   const tied = sorted.slice(0, 3).some((v, i) => v === sorted[i + 1]);
   const matches = status === 'differentiated' ? matchTrajectories(vector, PATHWAYS) : [];
-  const topThree = matches.slice(0, 3).map(m => m.pathwayId);
-  const second = order[1], secondIndex = DIMENSIONS.indexOf(second);
+  const topThree = matches.slice(0, 3).map((m) => m.pathwayId);
+  const second = order[1],
+    secondIndex = DIMENSIONS.indexOf(second);
   const remaining = matches.slice(3);
-  const wildcard = vector[secondIndex] > 0 ? remaining.find(m => PATHWAYS.find(p => p.id === m.pathwayId)!.hollandCode.includes(second)) || [...remaining].sort((a, b) => PATHWAYS.find(p => p.id === b.pathwayId)!.riasecVector[secondIndex] - PATHWAYS.find(p => p.id === a.pathwayId)!.riasecVector[secondIndex])[0] : undefined;
-  if (selectedPathwayId && !PATHWAYS.some(p => p.id === selectedPathwayId)) throw new Error('Selecciona una trayectoria del catálogo.');
+  const wildcard =
+    vector[secondIndex] > 0
+      ? remaining.find((m) => PATHWAYS.find((p) => p.id === m.pathwayId)!.hollandCode.includes(second)) ||
+        [...remaining].sort(
+          (a, b) =>
+            PATHWAYS.find((p) => p.id === b.pathwayId)!.riasecVector[secondIndex] -
+            PATHWAYS.find((p) => p.id === a.pathwayId)!.riasecVector[secondIndex],
+        )[0]
+      : undefined;
+  if (selectedPathwayId && !PATHWAYS.some((p) => p.id === selectedPathwayId)) throw new Error('Selecciona una trayectoria del catálogo.');
   if (!Number.isFinite(Date.parse(completedAt))) throw new Error('Fecha de diagnóstico inválida.');
-  return { version: DIAGNOSIS_VERSION, catalogVersion: CATALOG_VERSION, answers: { ...answers }, vector,
-    code: status === 'differentiated' ? hollandCode(vector) : null, tied, status, matches, topThree,
-    wildcardId: wildcard?.pathwayId || null, wildcardDimension: wildcard ? second : null, selectedPathwayId, completedAt };
+  return {
+    version: DIAGNOSIS_VERSION,
+    catalogVersion: CATALOG_VERSION,
+    answers: { ...answers },
+    vector,
+    code: status === 'differentiated' ? hollandCode(vector) : null,
+    tied,
+    status,
+    matches,
+    topThree,
+    wildcardId: wildcard?.pathwayId || null,
+    wildcardDimension: wildcard ? second : null,
+    selectedPathwayId,
+    completedAt,
+  };
 }
 // Recompute derived fields from validated answers; never trust stored percentages or codes.
 export function restoreDiagnosis(value: unknown): DiagnosisResult | null {
   if (!value || typeof value !== 'object') return null;
   const data = value as Partial<DiagnosisResult>;
   if (data.version !== DIAGNOSIS_VERSION || typeof data.selectedPathwayId !== 'string' || typeof data.completedAt !== 'string') return null;
-  try { return createDiagnosis(data.answers as Answers, data.selectedPathwayId, data.completedAt); } catch { return null; }
+  try {
+    return createDiagnosis(data.answers as Answers, data.selectedPathwayId, data.completedAt);
+  } catch {
+    return null;
+  }
+}
+
+// Attach a diagnosis to a profile: sets the affinity, marks it onboarded and gives the first 50 XP.
+export function applyDiagnosis<P extends { xp: number }>(profile: P, diagnosis: DiagnosisResult) {
+  const path = PATHWAYS.find((p) => p.id === diagnosis.selectedPathwayId)!;
+  const matchScore = diagnosis.matches.find((m) => m.pathwayId === path.id)?.matchScore || 0;
+  return {
+    ...profile,
+    diagnosis,
+    affinity: { category: path.title, percentage: matchScore },
+    xp: Math.max(profile.xp, 50),
+    isOnboarded: true,
+  };
 }

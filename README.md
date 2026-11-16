@@ -18,10 +18,9 @@ npm run build
 npm run lint
 npm run typecheck
 npm run test:diagnosis
-node unslop/v2-contrast-stress.cjs
 ```
 
-Additional repeatable browser checks are in `unslop/v2-browser-stress.cjs` and `unslop/verify-pass.cjs`. They use Playwright supplied by the Codex runtime and installed Microsoft Edge; no browser dependency was added to the project. Set NODE_PATH to the bundled module directory in this environment before running them. Their production preview uses port 3100.
+The older browser and design-audit scripts and reports were moved out of this project to `../archive/unslop/`.
 
 ## Vocational interest assessment
 
@@ -84,11 +83,6 @@ The team supplied `https://cumbreal.vercel.app` as the final demo URL. The [fair
 
 ## Design and delivery evidence
 
-- `unslop/LANE.md`: authorized corrected design direction and tokens.
-- `unslop/V2-REVIEW.md`: Antigravity claims challenged and corrected.
-- `unslop/DESIGN-AUDIT.md`: original 43/100 audit, retained for comparison.
-- `unslop/RETHEME-REPORT.md`: final checks and remaining limitations.
-- `unslop/CLIENT-REPORT.html`: visual before/after report.
 
 No new npm dependencies were introduced for this redesign.
 
