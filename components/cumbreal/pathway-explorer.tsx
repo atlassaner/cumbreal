@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
 import { PATHWAYS } from '@/lib/pathways';
@@ -12,6 +12,7 @@ export function PathwayExplorer({ dashboard = false }: { dashboard?: boolean }) 
   const result = dashboard ? user?.diagnosis : undefined;
   const [selection, setSelection] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const panel = useRef<HTMLDivElement>(null);
   const selected = selection || result?.selectedPathwayId || PATHWAYS[0].id;
   const path = PATHWAYS.find((p) => p.id === selected) || PATHWAYS[0];
   const paths = result?.matches.length ? result.matches.map((m) => PATHWAYS.find((p) => p.id === m.pathwayId)!) : PATHWAYS;
@@ -54,6 +55,11 @@ export function PathwayExplorer({ dashboard = false }: { dashboard?: boolean }) 
                 onClick={() => {
                   setSelection(p.id);
                   setMessage('');
+                  // Stacked on mobile, the detail sits below all eight options; bring it to the tap.
+                  if (window.matchMedia('(max-width: 767px)').matches) {
+                    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    panel.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+                  }
                 }}
                 className={'path-option ' + (selected === p.id ? 'border-teal bg-teal-light' : 'border-transparent hover:bg-canvas-subtle')}
               >
@@ -75,15 +81,18 @@ export function PathwayExplorer({ dashboard = false }: { dashboard?: boolean }) 
               : 'Catálogo para explorar, sin orden de afinidad personal.'}
           </p>
         </div>
-        <div className="panel relative overflow-hidden" aria-live="polite">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-3xl">{path.title}</h2>
-              <p className="annotation mt-1">{path.domain}</p>
+        <div ref={panel} className="panel relative overflow-hidden scroll-mt-6" aria-live="polite">
+          {/* Keyed so the new pathway's page settles in; the live region itself stays mounted. */}
+          <div key={path.id} className="swap-in">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="text-3xl">{path.title}</h2>
+                <p className="annotation mt-1">{path.domain}</p>
+              </div>
+              <Cumbi state="Explorando" size={90} className="shrink-0 hidden lg:block" />
             </div>
-            <Cumbi state="Explorando" size={90} className="shrink-0 hidden lg:block" />
+            <PathwayDetails path={path} />
           </div>
-          <PathwayDetails path={path} />
           {result && (
             <button type="button" className="button mt-5" onClick={saveSelection}>
               {result.selectedPathwayId === path.id ? 'Trayectoria guardada · confirmar elección' : 'Guardar como mi trayectoria'}

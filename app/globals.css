@@ -281,13 +281,69 @@ h3[class] {
   letter-spacing: -0.025em;
   font-weight: 400;
 }
+/* Hero focal moment: the route draws up from the trail to the summit, then the marker lands. */
+.route-draw {
+  animation: route-draw 900ms cubic-bezier(0.16, 1, 0.3, 1) 300ms backwards;
+}
+@keyframes route-draw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: -1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+.route-mark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: route-mark 320ms cubic-bezier(0.16, 1, 0.3, 1) 1050ms backwards;
+}
+@keyframes route-mark {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+/* Results: the code-letter bars fill from zero, one after another. */
+.bar-fill {
+  transform-origin: left center;
+  animation: bar-fill 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes bar-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+/* Pathway detail: the newly chosen page settles in place. */
+.swap-in {
+  animation: swap-in 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Reduced motion keeps meaning (fades, color, state) and drops movement. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
+  html {
+    scroll-behavior: auto;
+  }
+  .route-draw,
+  .route-mark,
+  .cumbi-celebrate {
+    animation: none;
+  }
+  .bar-fill,
+  .swap-in {
+    animation-name: fade-in;
   }
 }
 

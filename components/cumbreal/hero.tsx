@@ -40,8 +40,15 @@ export function Hero() {
             <path d="M-28 277C47 217 79 218 126 251S202 170 261 175 327 259 395 223 457 230 501 207" />
             <path d="M-28 300C47 240 79 241 126 274S202 193 261 198 327 282 395 246 457 253 501 230" />
           </g>
-          <path d="M419 172C389 202 428 223 372 244S294 251 296 270" stroke="#F2AA2E" strokeWidth="5" strokeLinecap="round" />
-          <circle cx="419" cy="172" r="6" fill="#F2AA2E" stroke="#F7F4EC" strokeWidth="3" />
+          <path
+            className="route-draw"
+            pathLength={1}
+            d="M419 172C389 202 428 223 372 244S294 251 296 270"
+            stroke="#F2AA2E"
+            strokeWidth="5"
+            strokeLinecap="round"
+          />
+          <circle className="route-mark" cx="419" cy="172" r="6" fill="#F2AA2E" stroke="#F7F4EC" strokeWidth="3" />
         </svg>
 
         <Cumbi size={250} state="Base" className="relative mx-auto" />

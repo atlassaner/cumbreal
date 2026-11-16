@@ -11,8 +11,16 @@ export function InterestProfile({ result }: { result: DiagnosisResult }) {
   const lead = result.code ? order.slice(0, 3) : [];
   const rest = result.code ? order.slice(3) : order;
   const score = (d: HollandType) => result.vector[DIMENSIONS.indexOf(d)];
-  const meter = (d: HollandType) => (
-    <meter className="interest-meter w-full h-3 mt-1" min={0} max={1} value={score(d)} aria-label={'Interés ' + HOLLAND_TYPES[d].name}>
+  // Lead bars fill in code order, so the reveal reads the result aloud: first letter, second, third.
+  const meter = (d: HollandType, order?: number) => (
+    <meter
+      className={'interest-meter w-full h-3 mt-1' + (order === undefined ? '' : ' bar-fill')}
+      style={order === undefined ? undefined : { animationDelay: 250 + order * 140 + 'ms' }}
+      min={0}
+      max={1}
+      value={score(d)}
+      aria-label={'Interés ' + HOLLAND_TYPES[d].name}
+    >
       {Math.round(score(d) * 100)} de 100
     </meter>
   );
@@ -44,13 +52,13 @@ export function InterestProfile({ result }: { result: DiagnosisResult }) {
       )}
       {lead.length > 0 && (
         <div className="grid sm:grid-cols-3 gap-6 mt-6">
-          {lead.map((d) => (
+          {lead.map((d, i) => (
             <div key={d} className="border-t border-ink/25 pt-4">
               <h3 className="text-2xl">
                 {HOLLAND_TYPES[d].name} <span className="annotation font-sans">· {d}</span>
               </h3>
               <p className="text-sm tabular-nums mt-1">{Math.round(score(d) * 100)}/100</p>
-              {meter(d)}
+              {meter(d, i)}
               <p className="mt-2">{HOLLAND_TYPES[d].description}</p>
             </div>
           ))}
