@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import { useProgress } from '@/lib/progress-context';
 import { PATHWAYS } from '@/lib/pathways';
 import { Cumbi } from '@/components/cumbreal/cumbi';
+import { CumbiChat } from '@/components/cumbreal/cumbi-chat';
 export default function Overview() {
   const { user } = useAuth();
   const { activities, isLoading } = useProgress();
@@ -96,6 +97,15 @@ export default function Overview() {
           </ul>
         )}
       </section>
+      <CumbiChat
+        context={{
+          firstName: user.fullName.split(' ')[0],
+          code: user.diagnosis?.code ?? null,
+          selectedPathwayId: user.diagnosis?.selectedPathwayId,
+          topThree: user.diagnosis?.topThree,
+          activityCount: activities.length,
+        }}
+      />
     </>
   );
 }

@@ -163,3 +163,12 @@ test('applyDiagnosis sets affinity, onboards, gives 50 XP once and never lowers 
   assert.equal(applyDiagnosis({ xp: 300 }, d).xp, 300);
   assert.equal(applyDiagnosis(fresh, d).xp, 50);
 });
+
+test('Cumbi scripted replies use the student profile and fall back honestly', () => {
+  const { reply } = require('../lib/cumbi-replies.ts');
+  const ctx = { firstName: 'Ana', code: 'IAS', selectedPathwayId: PATHWAYS[0].id, topThree: PATHWAYS.slice(0, 3).map((p) => p.id), activityCount: 0 };
+  assert.match(reply('¿Qué significa mi código?', ctx).text, /IAS/);
+  assert.match(reply('¿Por dónde empiezo?', ctx).text, new RegExp(PATHWAYS[0].starterProject.slice(0, 20)));
+  assert.equal(reply('¿Dónde puedo estudiar?', { ...ctx, selectedPathwayId: undefined }).link.href, '/onboarding');
+  assert.match(reply('xyz', ctx).text, /aún no lo sé/);
+});
