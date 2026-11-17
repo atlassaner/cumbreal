@@ -3,7 +3,7 @@ export const SESSION_KEY = 'cumbreal_v2_session';
 export const ACCOUNTS_KEY = 'cumbreal_v2_accounts';
 export const GUEST_DIAGNOSIS_KEY = 'cumbreal_diagnosis_guest_v1';
 export const progressKey = (userId: string) => 'cumbreal_v2_progress:' + userId;
-export const draftKey = (userId: string) => 'cumbreal_diagnosis_draft_v1:' + userId;
+export const draftKey = (userId: string) => 'cumbreal_diagnosis_draft_v2:' + userId;
 
 // Per-user keys all end with ":<userId>".
 export function clearUserData(userId: string) {

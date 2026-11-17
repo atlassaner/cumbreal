@@ -10,14 +10,18 @@ import { PATHWAYS } from '@/lib/pathways';
 import { Answers, createDiagnosis, DIAGNOSIS_VERSION, LIKERT_OPTIONS, QUESTIONS } from '@/lib/diagnosis';
 import { GUEST_DIAGNOSIS_KEY, draftKey } from '@/lib/storage';
 
+// Step 0 is the intro, 1–18 one activity each, RESULTS the map.
+const RESULTS = QUESTIONS.length + 1;
+
 function Questionnaire() {
   const { user, completeOnboarding } = useAuth();
   const router = useRouter();
-  const [step, setStep] = useState(user?.diagnosis ? 7 : 0);
+  const [step, setStep] = useState(user?.diagnosis ? RESULTS : 0);
   const [answers, setAnswers] = useState<Answers>(user?.diagnosis?.answers || {});
   const [selected, setSelected] = useState(user?.diagnosis?.selectedPathwayId || '');
   const [message, setMessage] = useState('');
   const [ready, setReady] = useState(false);
+  const [advancing, setAdvancing] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const key = draftKey(user?.id || 'guest');
   useEffect(() => {
@@ -30,7 +34,7 @@ function Questionnaire() {
           draft.version !== DIAGNOSIS_VERSION ||
           !Number.isInteger(draft.step) ||
           draft.step < 0 ||
-          draft.step > 7 ||
+          draft.step > RESULTS ||
           !draft.answers ||
           typeof draft.answers !== 'object' ||
           Array.isArray(draft.answers) ||
@@ -41,7 +45,7 @@ function Questionnaire() {
           )
         )
           throw new Error('invalid');
-        if (draft.step === 7) createDiagnosis(draft.answers, draft.selected);
+        if (draft.step === RESULTS) createDiagnosis(draft.answers, draft.selected);
         setAnswers(draft.answers);
         setSelected(draft.selected);
         setStep(draft.step);
@@ -71,21 +75,24 @@ function Questionnaire() {
       setMessage('Tus respuestas siguen en pantalla, pero no pudimos guardar el borrador. Comprueba el almacenamiento antes de salir.');
     }
   }
-  const batch = QUESTIONS.slice((step - 1) * 3, step * 3);
+  const question = QUESTIONS[step - 1];
   const answered = QUESTIONS.filter((q) => answers[q.id] !== undefined).length;
-  const completeBatch = batch.length === 3 && batch.every((q) => answers[q.id] !== undefined);
-  const result = step === 7 ? createDiagnosis(answers, selected) : null;
-  function next() {
-    if (!completeBatch) {
-      setMessage('Responde las tres actividades antes de continuar.');
-      return;
-    }
-    try {
-      if (step === 6) createDiagnosis(answers);
-      persist(answers, step + 1);
-    } catch {
-      setMessage('Faltan respuestas. Vuelve a las actividades anteriores y completa las 18.');
-    }
+  const result = step === RESULTS ? createDiagnosis(answers, selected) : null;
+  function answer(value: number) {
+    if (advancing) return;
+    const nextAnswers = { ...answers, [question.id]: value };
+    persist(nextAnswers, step);
+    setAdvancing(true);
+    // A beat to see the choice land; also stops a double click from answering the next activity.
+    setTimeout(() => {
+      setAdvancing(false);
+      try {
+        if (step === QUESTIONS.length) createDiagnosis(nextAnswers);
+        persist(nextAnswers, step + 1);
+      } catch {
+        setMessage('Faltan respuestas. Vuelve a las actividades anteriores y completa las 18.');
+      }
+    }, 250);
   }
   function finish() {
     if (!selected || !result) {
@@ -126,7 +133,7 @@ function Questionnaire() {
             interés, no en tus notas ni en lo que otras personas esperan.
           </p>
           <ul className="list-disc pl-5 space-y-2 mt-5">
-            <li>Seis bloques de tres actividades, sin límite de tiempo.</li>
+            <li>Una actividad a la vez, sin límite de tiempo. Puedes volver atrás cuando quieras.</li>
             <li>Podrás revisar tus respuestas y explorar ocho trayectorias de El Salvador.</li>
             <li>
               Tu resultado describe intereses actuales. Esta adaptación no es una prueba de aptitud ni un diagnóstico psicológico validado.
@@ -146,57 +153,44 @@ function Questionnaire() {
             </button>
           </div>
         </>
-      ) : step < 7 ? (
+      ) : step < RESULTS ? (
         <>
           <p className="annotation" aria-live="polite">
-            Bloque {step} de 6 · {answered} de 18 respondidas
+            Actividad {step} de {QUESTIONS.length} · {answered} respondidas
           </p>
-          <progress className="w-full h-2 mt-3 accent-teal-deep" max={18} value={answered} aria-label="Actividades respondidas" />
-          <h1 ref={heading} tabIndex={-1} className="text-3xl mt-5">
-            ¿Cuánto te gustaría hacer esto?
+          <progress
+            className="w-full h-2 mt-3 accent-teal-deep"
+            max={QUESTIONS.length}
+            value={answered}
+            aria-label="Actividades respondidas"
+          />
+          <p className="text-sm text-ink-muted mt-6">¿Cuánto te gustaría hacer esto?</p>
+          <h1 ref={heading} tabIndex={-1} id="activity" className="text-3xl mt-2 min-h-[2.3em]">
+            {question.text}
           </h1>
-          <p className="text-sm text-ink-muted mt-3">
-            Elige una respuesta por actividad. Puedes cambiarla. Con el teclado: Tab entra al grupo y las flechas recorren sus opciones.
-          </p>
-          <div className="space-y-8 mt-6">
-            {batch.map((q) => (
-              <fieldset key={q.id} className="border-t border-ink/15 pt-5">
-                <legend className="font-medium pr-2">
-                  {q.id.slice(1)}. {q.text}
-                </legend>
-                <div className="grid gap-2 mt-3">
-                  {LIKERT_OPTIONS.map((label, i) => (
-                    <label
-                      key={label}
-                      className={
-                        'flex items-center gap-3 min-h-[48px] border rounded-lg px-4 py-2 cursor-pointer ' +
-                        (answers[q.id] === i + 1 ? 'border-teal bg-teal-light' : 'border-ink/20 hover:bg-canvas')
-                      }
-                    >
-                      <input
-                        className="w-5 h-5 accent-teal-deep shrink-0"
-                        type="radio"
-                        name={q.id}
-                        value={i + 1}
-                        checked={answers[q.id] === i + 1}
-                        onChange={() => persist({ ...answers, [q.id]: i + 1 }, step)}
-                      />
-                      <span>
-                        {i + 1} · {label}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
+          <div role="group" aria-labelledby="activity" className="grid grid-cols-5 gap-2 mt-6">
+            {LIKERT_OPTIONS.map((label, i) => (
+              <button
+                key={question.id + i}
+                type="button"
+                aria-pressed={answers[question.id] === i + 1}
+                disabled={advancing}
+                onClick={() => answer(i + 1)}
+                className={
+                  'flex flex-col items-center justify-start gap-2 min-h-[96px] border rounded-lg px-1 py-3 text-center ' +
+                  (answers[question.id] === i + 1 ? 'border-teal bg-teal-light text-teal-deep' : 'border-ink/20 hover:bg-canvas')
+                }
+              >
+                <span className="text-2xl font-serif">{i + 1}</span>
+                <span className="text-xs leading-tight">{label}</span>
+              </button>
             ))}
           </div>
           <div className="flex justify-between gap-3 mt-8 border-t border-ink/15 pt-5">
-            <button type="button" className="button button-secondary" onClick={() => persist(answers, step - 1)}>
+            <button type="button" className="button button-secondary" onClick={() => persist(answers, step - 1)} disabled={advancing}>
               Anterior
             </button>
-            <button type="button" className="button disabled:opacity-60" disabled={!completeBatch} onClick={next}>
-              {step === 6 ? 'Ver mis resultados' : 'Continuar'}
-            </button>
+            <p className="annotation self-center text-right">Al elegir, pasas a la siguiente.</p>
           </div>
         </>
       ) : (
@@ -208,7 +202,7 @@ function Questionnaire() {
                 Terminaste. Este es tu mapa para comenzar.
               </h1>
             </div>
-            <DiagnosisResults result={result} selected={selected} onSelect={(id) => persist(answers, 7, id)} />
+            <DiagnosisResults result={result} selected={selected} onSelect={(id) => persist(answers, RESULTS, id)} />
             <p className="text-sm text-ink-muted mt-6">
               {user?.diagnosis
                 ? 'Guardar actualizará tu resultado y conservará tus actividades y XP.'
