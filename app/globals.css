@@ -3,121 +3,456 @@
 @tailwind utilities;
 
 @layer base {
- :root {
-  --canvas:247 244 236; --canvas-subtle:232 237 233;
-  --ink:34 49 58; --ink-muted:90 107 117; --ink-faint:139 156 166;
-  --teal:59 128 120; --teal-vibrant:79 157 151; --teal-deep:40 105 122; --teal-light:230 242 240;
-  --amber:242 170 46; --amber-subtle:255 245 224; --amber-dark:200 133 21;
-  --success:45 125 70; --alert:217 72 40;
-  --background:44 41% 95%; --foreground:203 26% 18%; --card:0 0% 100%; --card-foreground:203 26% 18%;
-  --popover:0 0% 100%; --popover-foreground:203 26% 18%; --primary:192 51% 32%; --primary-foreground:0 0% 100%;
-  --secondary:144 12% 92%; --secondary-foreground:203 26% 18%; --muted:144 12% 92%; --muted-foreground:202 13% 41%;
-  --accent:40 88% 56%; --accent-foreground:203 26% 18%; --destructive:11 70% 40%; --destructive-foreground:0 0% 100%;
-  --border:202 13% 65%; --input:202 13% 41%; --ring:192 51% 32%; --radius:.5rem;
- }
- * { @apply border-border; }
- body { @apply bg-canvas text-ink; font-feature-settings:'rlig' 1,'calt' 1; line-height:1.6; }
- h1,h2,h3 { @apply font-serif; line-height:1.15; letter-spacing:-.025em; font-weight:400; }
- h1,h2,h3,p { overflow-wrap:break-word; }
- button,input,textarea,select { font:inherit; }
- button,a,input,textarea,select { touch-action:manipulation; }
- button,a { -webkit-tap-highlight-color:transparent; }
- a,button { min-height:44px; min-width:44px; }
- a { display:inline-flex; align-items:center; gap:.4rem; transition:color .18s ease-out,background-color .18s ease-out,border-color .18s ease-out; }
- a:hover { color:rgb(var(--teal-deep)); }
- button { transition:background-color .18s ease-out,border-color .18s ease-out; }
- :where(a,button,input,textarea,select):focus-visible { outline:2px solid rgb(var(--teal-deep)); outline-offset:4px; }
- button:disabled { cursor:not-allowed; }
- input,textarea,select { min-width:0; }
- progress { appearance:none; border:none; border-radius:4px; overflow:hidden; background:#E8EDE9; color:#28697A; }
- progress::-webkit-progress-bar { background:#D3E1DA; }
- progress::-webkit-progress-value { background:#28697A; }
- progress::-moz-progress-bar { background:#28697A; }
- meter.interest-meter { appearance:none; display:block; border:none; border-radius:4px; overflow:hidden; background:#E8EDE9; }
- meter.interest-meter::-webkit-meter-bar { border:none; border-radius:4px; background:#E8EDE9; }
- meter.interest-meter::-webkit-meter-optimum-value { background:#28697A; }
- meter.interest-meter::-moz-meter-bar { background:#28697A; }
- ::selection { background:#F2AA2E; color:#22313A; }
+  :root {
+    --canvas: 247 244 236;
+    --canvas-subtle: 232 237 233;
+    --ink: 34 49 58;
+    --ink-muted: 90 107 117;
+    --ink-faint: 139 156 166;
+    --teal: 59 128 120;
+    --teal-vibrant: 79 157 151;
+    --teal-deep: 40 105 122;
+    --teal-light: 230 242 240;
+    --amber: 242 170 46;
+    --amber-subtle: 255 245 224;
+    --amber-dark: 200 133 21;
+    --success: 45 125 70;
+    --alert: 217 72 40;
+    --background: 44 41% 95%;
+    --foreground: 203 26% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 203 26% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 203 26% 18%;
+    --primary: 192 51% 32%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 144 12% 92%;
+    --secondary-foreground: 203 26% 18%;
+    --muted: 144 12% 92%;
+    --muted-foreground: 202 13% 41%;
+    --accent: 40 88% 56%;
+    --accent-foreground: 203 26% 18%;
+    --destructive: 11 70% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 202 13% 65%;
+    --input: 202 13% 41%;
+    --ring: 192 51% 32%;
+    --radius: 0.5rem;
+  }
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-canvas text-ink;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+    line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+  }
+  h1,
+  h2,
+  h3,
+  p {
+    overflow-wrap: break-word;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    touch-action: manipulation;
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  a,
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition:
+      color 0.18s ease-out,
+      background-color 0.18s ease-out,
+      border-color 0.18s ease-out;
+  }
+  a:hover {
+    color: rgb(var(--teal-deep));
+  }
+  button {
+    transition:
+      background-color 0.18s ease-out,
+      border-color 0.18s ease-out;
+  }
+  :where(a, button, input, textarea, select):focus-visible {
+    outline: 2px solid rgb(var(--teal-deep));
+    outline-offset: 4px;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  input,
+  textarea,
+  select {
+    min-width: 0;
+  }
+  progress {
+    appearance: none;
+    border: none;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #e8ede9;
+    color: #28697a;
+  }
+  progress::-webkit-progress-bar {
+    background: #d3e1da;
+  }
+  progress::-webkit-progress-value {
+    background: #28697a;
+  }
+  progress::-moz-progress-bar {
+    background: #28697a;
+  }
+  meter.interest-meter {
+    appearance: none;
+    display: block;
+    border: none;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #e8ede9;
+  }
+  meter.interest-meter::-webkit-meter-bar {
+    border: none;
+    border-radius: 4px;
+    background: #e8ede9;
+  }
+  meter.interest-meter::-webkit-meter-optimum-value {
+    background: #28697a;
+  }
+  meter.interest-meter::-moz-meter-bar {
+    background: #28697a;
+  }
+  ::selection {
+    background: #f2aa2e;
+    color: #22313a;
+  }
 }
 @layer components {
- .wrap { @apply w-full max-w-6xl mx-auto px-6 lg:px-8; }
- .brand { @apply font-serif text-2xl gap-2 text-ink shrink-0; }
- .eyebrow { @apply text-xs font-medium text-teal-deep; letter-spacing:.12em; text-transform:uppercase; }
- .button { @apply inline-flex items-center justify-center gap-2 rounded-lg bg-amber text-ink font-medium px-5 py-3; min-height:48px; text-align:center; line-height:1.4; }
- .button:hover { @apply bg-amber-subtle text-ink; }
- .button-secondary { @apply border border-teal-deep bg-transparent text-teal-deep; }
- .button-secondary:hover { @apply bg-teal-light text-teal-deep; }
- .button-small { min-height:44px; @apply px-4 py-2; }
- .icon-button { @apply inline-flex items-center justify-center rounded-lg; min-width:44px; min-height:44px; }
- .panel { @apply rounded-xl border border-ink/10 bg-white p-5 sm:p-6 shadow-card; }
- .field-label { @apply block font-medium text-sm mb-2; }
- .field { @apply block w-full rounded-lg border border-ink-muted bg-white px-3 py-3 text-ink; min-height:48px; }
- .field::placeholder { color:rgb(var(--ink-muted)); opacity:1; }
- .field-error { @apply text-sm text-ink font-medium mt-2; }
- .tag { @apply inline-flex items-center rounded-full bg-canvas-subtle text-ink px-3 py-1 text-sm; }
- .path-option { @apply flex items-center gap-4 w-full border rounded-lg px-4 py-4 text-left font-medium; min-height:60px; }
- .journey-list { @apply grid gap-5; }
- .journey-list li { @apply flex items-start gap-4; }
- .journey-list li>span { @apply text-teal-deep text-sm border-b border-teal-deep pb-1 mt-1; }
- .hero-scene { @apply relative py-6 px-4 rounded-2xl bg-canvas-subtle; }
- .scene-ridge { position:absolute; inset:20% 0 25%; background:#D3E1DA; clip-path:polygon(0 100%,24% 25%,41% 57%,64% 0,100% 100%); }
- .skip-link { position:absolute; left:16px; top:-100px; z-index:100; background:#22313A; color:white; padding:12px; }
- .skip-link:focus { top:8px; }
- .notice { @apply rounded-lg bg-amber-subtle p-4 text-sm text-ink; }
+  .wrap {
+    @apply w-full max-w-6xl mx-auto px-6 lg:px-8;
+  }
+  .brand {
+    @apply font-serif text-2xl gap-2 text-ink shrink-0;
+  }
+  /* Field-notebook margin note: sits under what it describes, never above a heading. */
+  .annotation {
+    @apply text-sm text-ink-muted;
+  }
+  .button {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-amber text-ink font-medium px-5 py-3;
+    min-height: 48px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .button:hover {
+    @apply bg-amber-subtle text-ink;
+  }
+  .button-secondary {
+    @apply border border-teal-deep bg-transparent text-teal-deep;
+  }
+  .button-secondary:hover {
+    @apply bg-teal-light text-teal-deep;
+  }
+  .button-small {
+    min-height: 44px;
+    @apply px-4 py-2;
+  }
+  .icon-button {
+    @apply inline-flex items-center justify-center rounded-lg;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  /* Notebook section: a ruled line on the page, not a floating card. */
+  .panel {
+    @apply border-t border-ink/25 pt-6;
+  }
+  .field-label {
+    @apply block font-medium text-sm mb-2;
+  }
+  .field {
+    @apply block w-full rounded-lg border border-ink-muted bg-white px-3 py-3 text-ink;
+    min-height: 48px;
+  }
+  .field::placeholder {
+    color: rgb(var(--ink-muted));
+    opacity: 1;
+  }
+  .field-error {
+    @apply text-sm text-ink font-medium mt-2;
+  }
+  .tag {
+    @apply inline-flex items-center text-sm text-ink border-b border-ink/30;
+  }
+  .path-option {
+    @apply flex items-center gap-4 w-full border rounded-lg px-4 py-4 text-left font-medium;
+    min-height: 60px;
+  }
+  .journey-list {
+    @apply grid gap-5;
+  }
+  .journey-list li {
+    @apply flex items-start gap-4;
+  }
+  .journey-list li > span {
+    @apply text-teal-deep text-sm border-b border-teal-deep pb-1 mt-1;
+  }
+  .hero-scene {
+    @apply relative py-6 px-4 rounded-2xl bg-canvas-subtle;
+  }
+  .scene-ridge {
+    position: absolute;
+    inset: 20% 0 25%;
+    background: #d3e1da;
+    clip-path: polygon(0 100%, 24% 25%, 41% 57%, 64% 0, 100% 100%);
+  }
+  .skip-link {
+    position: absolute;
+    left: 16px;
+    top: -100px;
+    z-index: 100;
+    background: #22313a;
+    color: white;
+    padding: 12px;
+  }
+  .skip-link:focus {
+    top: 8px;
+  }
+  .notice {
+    @apply rounded-lg bg-amber-subtle p-4 text-sm text-ink;
+  }
 }
 @layer utilities {
- .font-serif { font-weight:400; line-height:1.15; letter-spacing:-.025em; }
- .text-balance { text-wrap:balance; }
+  .font-serif {
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
 }
-@keyframes cumbi-jump { 0%,100%{transform:translateY(0)} 45%{transform:translateY(-12px) rotate(-3deg)} 75%{transform:translateY(0) rotate(2deg)} }
-.cumbi-celebrate { animation:cumbi-jump .55s ease-out 1; }
-h1[class],h2[class],h3[class] { line-height:1.15; letter-spacing:-.025em; font-weight:400; }
-@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+@keyframes cumbi-jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  45% {
+    transform: translateY(-12px) rotate(-3deg);
+  }
+  75% {
+    transform: translateY(0) rotate(2deg);
+  }
+}
+.cumbi-celebrate {
+  animation: cumbi-jump 0.55s ease-out 1;
+}
+h1[class],
+h2[class],
+h3[class] {
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+}
+/* Hero focal moment: the route draws up from the trail to the summit, then the marker lands. */
+.route-draw {
+  animation: route-draw 900ms cubic-bezier(0.16, 1, 0.3, 1) 300ms backwards;
+}
+@keyframes route-draw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: -1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+.route-mark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: route-mark 320ms cubic-bezier(0.16, 1, 0.3, 1) 1050ms backwards;
+}
+@keyframes route-mark {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+/* Results: the code-letter bars fill from zero, one after another. */
+.bar-fill {
+  transform-origin: left center;
+  animation: bar-fill 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes bar-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+/* Pathway detail: the newly chosen page settles in place. */
+.swap-in {
+  animation: swap-in 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Reduced motion keeps meaning (fades, color, state) and drops movement. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .route-draw,
+  .route-mark,
+  .cumbi-celebrate {
+    animation: none;
+  }
+  .bar-fill,
+  .swap-in {
+    animation-name: fade-in;
+  }
+}
 
 /* The summit is a bounded brand scene; ordinary page content stays on cream. */
 .summit-footer {
- position:relative;
- isolation:isolate;
- overflow:hidden;
- background:rgb(var(--canvas));
- padding:64px 0 32px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: rgb(var(--canvas));
+  padding: 64px 0 32px;
 }
-.summit-landscape { position:absolute; inset:0; z-index:-1; pointer-events:none; }
-.summit-image { object-fit:cover; object-position:center; }
+.summit-landscape {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.summit-image {
+  object-fit: cover;
+  object-position: center;
+}
 .summit-landscape::after {
- content:'';
- position:absolute;
- inset:0;
- background:linear-gradient(180deg,rgb(var(--canvas)) 0%,rgb(var(--canvas) / .25) 18%,transparent 40%),linear-gradient(90deg,rgb(var(--canvas) / .72),transparent 62%);
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(var(--canvas)) 0%, rgb(var(--canvas) / 0.25) 18%, transparent 40%),
+    linear-gradient(90deg, rgb(var(--canvas) / 0.72), transparent 62%);
 }
-.summit-invitation { position:relative; min-height:400px; padding:16px 0 80px; }
-.summit-method-link { background:rgb(var(--canvas) / .96); }
+.summit-invitation {
+  position: relative;
+  min-height: 400px;
+  padding: 16px 0 80px;
+}
+.summit-method-link {
+  background: rgb(var(--canvas) / 0.96);
+}
 .summit-footer-panel {
- position:relative;
- padding:32px;
- border:1px solid rgb(255 255 255 / .85);
- border-radius:16px;
- background:rgb(var(--canvas) / .96);
- -webkit-backdrop-filter:blur(16px);
- backdrop-filter:blur(16px);
+  position: relative;
+  padding: 32px;
+  border: 1px solid rgb(255 255 255 / 0.85);
+  border-radius: 16px;
+  background: rgb(var(--canvas) / 0.96);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
-.summit-link-group { display:flex; flex-direction:column; align-items:flex-start; }
-.summit-link-group h3 { margin-bottom:8px; }
-.summit-link-group a { color:rgb(var(--ink)); font-size:14px; }
-.summit-link-group a:hover { color:rgb(var(--teal-deep)); text-decoration:underline; text-underline-offset:4px; }
-.pricing-card { transition:border-color .18s ease-out,background-color .18s ease-out; }
-.pricing-card:focus-within { border-color:rgb(var(--teal-deep)); }
-.hero-journey-scene { background:rgb(var(--canvas-subtle)); }
+.summit-link-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.summit-link-group h3 {
+  margin-bottom: 8px;
+}
+.summit-link-group a {
+  color: rgb(var(--ink));
+  font-size: 14px;
+}
+.summit-link-group a:hover {
+  color: rgb(var(--teal-deep));
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.pricing-card {
+  transition:
+    border-color 0.18s ease-out,
+    background-color 0.18s ease-out;
+}
+.pricing-card:focus-within {
+  border-color: rgb(var(--teal-deep));
+}
+.hero-journey-scene {
+  background: rgb(var(--canvas-subtle));
+}
 
-@media (max-width:767px) {
- .summit-footer { padding:40px 0 24px; }
- .summit-landscape { height:620px; }
- .summit-image { object-position:72% center; }
- .summit-landscape::after { background:linear-gradient(180deg,rgb(var(--canvas) / .98) 0%,rgb(var(--canvas) / .9) 36%,rgb(var(--canvas) / .08) 68%,rgb(var(--canvas)) 100%); }
- .summit-invitation { min-height:460px; padding-top:8px; padding-bottom:96px; }
- .summit-footer-panel { padding:24px; }
- .summit-link-group + .summit-link-group { padding-top:24px; border-top:1px solid rgb(var(--ink) / .15); }
+@media (max-width: 767px) {
+  .summit-footer {
+    padding: 40px 0 24px;
+  }
+  .summit-landscape {
+    height: 620px;
+  }
+  .summit-image {
+    object-position: 72% center;
+  }
+  .summit-landscape::after {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--canvas) / 0.98) 0%,
+      rgb(var(--canvas) / 0.9) 36%,
+      rgb(var(--canvas) / 0.08) 68%,
+      rgb(var(--canvas)) 100%
+    );
+  }
+  .summit-invitation {
+    min-height: 460px;
+    padding-top: 8px;
+    padding-bottom: 96px;
+  }
+  .summit-footer-panel {
+    padding: 24px;
+  }
+  .summit-link-group + .summit-link-group {
+    padding-top: 24px;
+    border-top: 1px solid rgb(var(--ink) / 0.15);
+  }
 }
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
- .summit-footer-panel { background:rgb(var(--canvas)); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .summit-footer-panel {
+    background: rgb(var(--canvas));
+  }
 }
